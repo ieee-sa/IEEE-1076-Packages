@@ -1,0 +1,30 @@
+image: debian:testing
+#service:
+#  - python:latest
+
+build:
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y git make colormake
+    - apt-get install -y gcc-7 gnat-7 gcc gnat
+    - apt-get install -y llvm-4.0 llvm-4.0-dev llvm-4.0-tools llvm
+    - apt-get install -y clang-4.0 clang
+    - apt-get install -y zlib1g-dev libedit-dev
+    - apt-get install -y python3 python3-pip
+#    - ./tools/GitLab-CI/grc.setup.sh
+    - ./tools/GitLab-CI/ghdl.setup.sh
+    - pip3 install -r ./tools/GitLab-CI/requirements.txt
+  script:
+    - echo "build"
+    - export PATH=$PATH:./ghdl/bin
+    - export VUNIT_SIMULATOR=ghdl
+    - python3 ./testbench/run.py -k
+#  artifacts:
+#    paths:
+#      - mybinary
+
+## run tests using the binary built before
+#test:
+#  stage: test
+#  script:
